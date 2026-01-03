@@ -1,488 +1,374 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Winter-Hörspiel – 4 Kategorien</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Winter – Hörspiel</title>
 
   <style>
-    :root{
-      --panel: rgba(255,255,255,0.86);
-      --text: #1a1a1a;
-      --muted: #4a4a4a;
-      --shadow: 0 10px 30px rgba(0,0,0,0.18);
-      --radius: 18px;
-      --gap: 14px;
+    /* Schoulschrëft (ersetze FONT_URL ggf. durch deinen bekannten Link) */
+    @font-face{
+      font-family: "Schoulschreft";
+      src: url("https://albrechtclaire1007.github.io/Schoulschr%C3%ABft/Schoulschr%C3%ABft.ttf") format("truetype");
+      font-display: swap;
     }
 
-    /* Hintergrund vollständig sichtbar (contain) */
+    html, body { height: 100%; margin: 0; }
     body{
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background-image: url("https://i.postimg.cc/BbCyMf2N/winter-background.png");
-      background-repeat: no-repeat;
-      background-position: center top;
+      /* Hintergrund vollständig sichtbar */
+      background: #eaf2ff url("https://i.postimg.cc/BbCyMf2N/winter-background.png") no-repeat center top;
       background-size: contain;
-      background-color: #eaf2ff; /* damit der Rand angenehm aussieht */
+      overflow: hidden;
+      font-family: "Schoulschreft", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    .wrap{
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 22px;
-      box-sizing: border-box;
-    }
-
-    .panel{
-      width: min(980px, 100%);
-      background: var(--panel);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px 18px 16px;
-      box-sizing: border-box;
-      backdrop-filter: blur(3px);
-    }
-
-    .top{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 16px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    h1{
-      font-size: 20px;
-      margin: 0;
-      font-weight: 700;
-    }
-
-    .subtitle{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.3;
-    }
-
-    .tabs{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .tab{
-      border: 0;
-      border-radius: 999px;
-      padding: 10px 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 650;
-      background: #f2f2f2;
-      color: #222;
-      transition: transform .08s ease, filter .08s ease;
-      user-select: none;
-    }
-    .tab:active{ transform: scale(0.98); }
-
-    .tab[data-color="orange"].active{ background: #f4a261; }
-    .tab[data-color="yellow"].active{ background: #f6d365; }
-    .tab[data-color="pink"].active{ background: #f7a6b8; }
-    .tab[data-color="blue"].active{ background: #6ec5d8; }
-
-    .controls{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      margin: 12px 0 10px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(0,0,0,0.08);
-    }
-
-    .btn{
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 14px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 700;
-      background: #ffffff;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.10);
-      user-select: none;
-    }
-    .btn:active{ transform: scale(0.99); }
-
-    .status{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 14px;
-      align-items: center;
-      justify-content: flex-end;
-      font-size: 14px;
-      color: #2a2a2a;
-    }
-
-    .pill{
-      background: rgba(0,0,0,0.06);
-      padding: 8px 10px;
-      border-radius: 999px;
-      font-weight: 650;
-    }
-
-    .feedback{
-      margin: 10px 0 12px;
-      font-size: 16px;
-      font-weight: 800;
-      min-height: 24px;
-    }
-
-    .feedback.ok{ color: #0f7a2a; }
-    .feedback.no{ color: #b11c1c; }
-
-    .options{
+    /* Startscreen: nur 4 Kreise */
+    #menu{
+      position: absolute;
+      inset: 0;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--gap);
-      margin-top: 8px;
+      place-items: start center;
+      padding-top: 28px;
+      pointer-events: auto;
     }
 
-    .card{
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 10px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-      cursor: pointer;
-      transition: transform .10s ease, box-shadow .10s ease;
-      user-select: none;
-      border: 2px solid transparent;
-    }
-
-    .card:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 7px 18px rgba(0,0,0,0.14);
-    }
-
-    .card img{
-      width: 100%;
-      height: 160px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .smallnote{
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .codebar{
-      margin-top: 10px;
+    .circles{
       display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .codebox{
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.06);
-      display: inline-flex;
+      gap: 18px;
       align-items: center;
       justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
-      letter-spacing: 1px;
     }
 
-    @media (max-width: 520px){
-      .card img{ height: 130px; }
-      .status{ justify-content: flex-start; }
+    .circle{
+      width: 74px;
+      height: 74px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.18);
+      opacity: 0.92;
+    }
+
+    .circle:active{ transform: scale(0.98); }
+
+    .orange{ background:#f4a261; }
+    .yellow{ background:#f6d365; }
+    .pink{ background:#f7a6b8; }
+    .blue{ background:#6ec5d8; }
+
+    /* Game screen: 4 große Bilder in einer Reihe */
+    #game{
+      position: absolute;
+      inset: 0;
+      display: none;
+      pointer-events: auto;
+    }
+
+    .options-row{
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      /* weit genug unten, damit die 4 Kreise oben frei bleiben */
+      top: 35%;
+      width: min(1100px, 92vw);
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .imgBtn{
+      width: 22vw;
+      max-width: 250px;
+      min-width: 150px;
+      aspect-ratio: 1 / 1;
+      border: 0;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.0);
+      cursor: pointer;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      transition: transform 120ms ease;
+    }
+    .imgBtn:active{ transform: scale(0.985); }
+
+    .imgBtn img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.22));
+    }
+
+    /* Replay button (Piktogramm), unten rechts "bei Pinguin" */
+    .replay{
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 66px;
+      height: 66px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: rgba(255,255,255,0.85);
+      box-shadow: 0 12px 22px rgba(0,0,0,0.22);
+      display: grid;
+      place-items: center;
+    }
+    .replay:active{ transform: scale(0.98); }
+
+    .replay svg{
+      width: 30px;
+      height: 30px;
+      opacity: 0.9;
+    }
+
+    /* Spare button (zurück), klein daneben */
+    .back{
+      position: absolute;
+      right: 94px;
+      bottom: 26px;
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.18);
+      display: grid;
+      place-items: center;
+    }
+    .back:active{ transform: scale(0.98); }
+
+    .back svg{
+      width: 22px;
+      height: 22px;
+      opacity: 0.85;
+    }
+
+    /* oben weiterhin die 4 Kreise sichtbar, auch im Spiel */
+    #topCircles{
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      gap: 18px;
     }
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="panel">
-    <div class="top">
-      <div>
-        <h1>Winter-Hörspiel</h1>
-        <p class="subtitle">Klicke auf „Anhören“. Danach wähle das richtige Bild aus vier Möglichkeiten.</p>
-      </div>
-
-      <div class="tabs" id="tabs"></div>
-    </div>
-
-    <div class="controls">
-      <button class="btn" id="btnListen">Anhören</button>
-      <button class="btn" id="btnNew">Neue Runde</button>
-
-      <div class="status">
-        <div class="pill">Kategorie: <span id="catLabel">-</span></div>
-        <div class="pill">Punkte: <span id="score">0</span></div>
-        <div class="pill">Runden: <span id="rounds">0</span></div>
-      </div>
-    </div>
-
-    <div class="feedback" id="feedback"></div>
-
-    <div class="options" id="options"></div>
-
-    <div class="codebar" aria-label="Code-Fortschritt">
-      <div class="pill">Code:</div>
-      <div class="codebox" id="code1">-</div>
-      <div class="codebox" id="code2">-</div>
-      <div class="codebox" id="code3">-</div>
-      <div class="codebox" id="code4">-</div>
-      <div class="pill">Richtig für Code: 4</div>
-    </div>
-
-    <div class="smallnote">
-      Hinweis: Die vier Bilder wechseln in jeder Runde. Der Code füllt sich, wenn vier Antworten richtig sind.
-      (Du kannst die Code-Regel später leicht anpassen.)
-    </div>
+  <!-- Menu (nur Kreise) -->
+  <div id="menu">
+    <div class="circles" id="menuCircles"></div>
   </div>
-</div>
+
+  <!-- Game -->
+  <div id="game">
+    <div id="topCircles"></div>
+
+    <div class="options-row" id="optionsRow"></div>
+
+    <button class="back" id="btnBack" aria-label="Zurück">
+      <!-- Pfeil-Icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <button class="replay" id="btnReplay" aria-label="Audio wiederholen">
+      <!-- Lautsprecher-Icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 5l-5 4H3v6h3l5 4V5z"/>
+        <path d="M15.5 8.5a4 4 0 010 7"/>
+        <path d="M18 6a7 7 0 010 12"/>
+      </svg>
+    </button>
+  </div>
 
 <script>
-  /* 1) BASIS-URL für Audio (dein Muster) */
-  const AUDIO_BASE =
-    "https://github.com/albrechtclaire1007/winter/raw/refs/heads/main/";
+  const BACKGROUND = "https://i.postimg.cc/BbCyMf2N/winter-background.png";
+  const AUDIO_BASE = "https://github.com/albrechtclaire1007/winter/raw/refs/heads/main/";
 
-  /* 2) Kategorien nach deinem Foto (Orange / Gelb / Pink / Blau)
-        Wichtig:
-        - "Vogel" ist in deinem Foto nicht markiert, aber du hast Bild + Audio.
-          Ich habe ihn hier in ORANGE (Tiere) einsortiert. Wenn du ihn anders willst: einfach verschieben.
-        - "Wollsocken" hat bei dir ein Bild "socken.png". Ich nutze das dafür.
-        - "Ohrenwärmer" hast du als Audio genannt, aber kein Bildlink in deiner Liste.
-          Wenn du später einen Link hast, kannst du ihn unten ergänzen. Der Begriff ist aktuell NICHT im Spiel.
+  /* Kategorien nach deiner Markierung:
+     Orange / Gelb / Pink / Blau.
+     Enthält nur Wörter, für die du Bildlinks gegeben hast.
+     (Reh/Ohrenwärmer sind nicht drin, weil Bildlink fehlt.)
   */
-
   const CATEGORIES = {
-    orange: {
-      title: "1 Orange",
-      items: [
-        { key: "eisbaer",    label: "Der Eisbär",     img: "https://i.postimg.cc/JHrCY1hM/eisbaer.png" },
-        { key: "reh",        label: "Das Reh",        img: "https://i.postimg.cc/grsWX6MV/stiefel.png" }, // Platzhalter-Schutz (siehe unten)
-        { key: "pinguin",    label: "Der Pinguin",    img: "https://i.postimg.cc/fkDsRvfg/pinguin.png" },
-        { key: "eiszapfen",  label: "Die Eiszapfen",  img: "https://i.postimg.cc/BPSf7qv3/eiszapfen.png" },
-        { key: "berge",      label: "Die Berge",      img: "https://i.postimg.cc/CBHV4ZwK/berge.png" },
-        { key: "tanne",      label: "Die Tanne",      img: "https://i.postimg.cc/qgwThCmX/tanne.png" },
-        { key: "vogel",      label: "Der Vogel",      img: "https://i.postimg.cc/JtxLDBTq/vogel.png" }
-      ]
-    },
-
-    yellow: {
-      title: "2 Gelb",
-      items: [
-        { key: "wollsocken",     label: "Die Wollsocken",   img: "https://i.postimg.cc/Cd7gBfvb/socken.png" },
-        { key: "muetze",         label: "Die Mütze",        img: "https://i.postimg.cc/3WYhxZFf/muetze.png" },
-        { key: "wintermantel",   label: "Der Wintermantel", img: "https://i.postimg.cc/vcmdWHjW/wintermantel.png" },
-        { key: "pullover",       label: "Der Pullover",     img: "https://i.postimg.cc/grmp2KHf/pullover.png" }
-        // { key: "ohrenwaermer", label: "Die Ohrenwärmer",  img: "HIER_DEIN_LINK" } // optional ergänzen
-      ]
-    },
-
-    pink: {
-      title: "3 Pink",
-      items: [
-        { key: "kakao",         label: "Der Kakao",        img: "https://i.postimg.cc/K3GhpZYK/kakao.png" },
-        { key: "kerze",         label: "Die Kerze",        img: "https://i.postimg.cc/vxYw2Qmt/kerze.png" },
-        { key: "iglu",          label: "Das Iglu",         img: "https://i.postimg.cc/9wmHgWfq/iglu.png" },
-        { key: "kamin",         label: "Der Kamin",        img: "https://i.postimg.cc/CnhprFK8/kamin.png" },
-        { key: "waermeflasche", label: "Die Wärmflasche",  img: "https://i.postimg.cc/XXLbGy2s/waermeflasche.png" },
-        { key: "decken",        label: "Die Decken",       img: "https://i.postimg.cc/zHzY2JfJ/decken.png" }
-      ]
-    },
-
-    blue: {
-      title: "4 Blau",
-      items: [
-        { key: "schal",          label: "Der Schal",          img: "https://i.postimg.cc/7bw4ZNNy/schal.png" },
-        { key: "schlittschuhe",  label: "Die Schlittschuhe",  img: "https://i.postimg.cc/4nsGx11N/schlittschuhe.png" },
-        { key: "schneemann",     label: "Der Schneemann",     img: "https://i.postimg.cc/Rq4mZTTn/schneemann.png" },
-        { key: "schneekugel",    label: "Die Schneekugel",    img: "https://i.postimg.cc/3WYhxZZy/schneekugel.png" },
-        { key: "schneeflocke",   label: "Die Schneeflocke",   img: "https://i.postimg.cc/14sS3KKt/schneeflocke.png" },
-        { key: "ski",            label: "Die Ski",            img: "https://i.postimg.cc/Cd7gBfvd/ski.png" },
-        { key: "schlitten",      label: "Der Schlitten",      img: "https://i.postimg.cc/QVhDdqqZ/schlitten.png" },
-        { key: "handschuhe",     label: "Die Handschuhe",     img: "https://i.postimg.cc/Mf6J3WGx/handschuhe.png" },
-        { key: "schneeball",     label: "Der Schneeball",     img: "https://i.postimg.cc/Thfx3cc2/schneeball.png" },
-        { key: "hausschuhe",     label: "Die Hausschuhe",     img: "https://i.postimg.cc/7JHrtxLb/hausschuhe.png" },
-        { key: "stiefel",        label: "Die Stiefel",        img: "https://i.postimg.cc/grsWX6MV/stiefel.png" },
-        { key: "schneeschaufel", label: "Die Schneeschaufel", img: "https://i.postimg.cc/w32pysWj/schneeschaufel.png" },
-        { key: "schneeeule",     label: "Die Schneeeule",     img: "https://i.postimg.cc/s1szgJJg/schneeeule.png" }
-      ]
-    }
+    orange: [
+      { key:"eisbaer",     img:"https://i.postimg.cc/JHrCY1hM/eisbaer.png" },
+      { key:"pinguin",     img:"https://i.postimg.cc/fkDsRvfg/pinguin.png" },
+      { key:"eiszapfen",   img:"https://i.postimg.cc/BPSf7qv3/eiszapfen.png" },
+      { key:"berge",       img:"https://i.postimg.cc/CBHV4ZwK/berge.png" },
+      { key:"tanne",       img:"https://i.postimg.cc/qgwThCmX/tanne.png" },
+      { key:"vogel",       img:"https://i.postimg.cc/JtxLDBTq/vogel.png" }
+    ],
+    yellow: [
+      { key:"wollsocken",  img:"https://i.postimg.cc/Cd7gBfvb/socken.png" },
+      { key:"muetze",      img:"https://i.postimg.cc/3WYhxZFf/muetze.png" },
+      { key:"wintermantel",img:"https://i.postimg.cc/vcmdWHjW/wintermantel.png" },
+      { key:"pullover",    img:"https://i.postimg.cc/grmp2KHf/pullover.png" }
+    ],
+    pink: [
+      { key:"kakao",         img:"https://i.postimg.cc/K3GhpZYK/kakao.png" },
+      { key:"kerze",         img:"https://i.postimg.cc/vxYw2Qmt/kerze.png" },
+      { key:"iglu",          img:"https://i.postimg.cc/9wmHgWfq/iglu.png" },
+      { key:"kamin",         img:"https://i.postimg.cc/CnhprFK8/kamin.png" },
+      { key:"waermeflasche", img:"https://i.postimg.cc/XXLbGy2s/waermeflasche.png" },
+      { key:"decken",        img:"https://i.postimg.cc/zHzY2JfJ/decken.png" }
+    ],
+    blue: [
+      { key:"schal",          img:"https://i.postimg.cc/7bw4ZNNy/schal.png" },
+      { key:"schlittschuhe",  img:"https://i.postimg.cc/4nsGx11N/schlittschuhe.png" },
+      { key:"schneemann",     img:"https://i.postimg.cc/Rq4mZTTn/schneemann.png" },
+      { key:"schneekugel",    img:"https://i.postimg.cc/3WYhxZZy/schneekugel.png" },
+      { key:"schneeflocke",   img:"https://i.postimg.cc/14sS3KKt/schneeflocke.png" },
+      { key:"ski",            img:"https://i.postimg.cc/Cd7gBfvd/ski.png" },
+      { key:"schlitten",      img:"https://i.postimg.cc/QVhDdqqZ/schlitten.png" },
+      { key:"handschuhe",     img:"https://i.postimg.cc/Mf6J3WGx/handschuhe.png" },
+      { key:"schneeball",     img:"https://i.postimg.cc/Thfx3cc2/schneeball.png" },
+      { key:"hausschuhe",     img:"https://i.postimg.cc/7JHrtxLb/hausschuhe.png" },
+      { key:"stiefel",        img:"https://i.postimg.cc/grsWX6MV/stiefel.png" },
+      { key:"schneeschaufel", img:"https://i.postimg.cc/w32pysWj/schneeschaufel.png" },
+      { key:"schneeeule",     img:"https://i.postimg.cc/s1szgJJg/schneeeule.png" }
+    ]
   };
 
-  /* WICHTIGER FIX:
-     In deiner Bildlink-Liste fehlt "reh.png".
-     Deshalb steht bei "reh" gerade ein Platzhalter.
-     Sobald du den Reh-Link hast, ersetze ihn oben, z.B.:
-     img: "https://.../reh.png"
-     (Audio-Link reh.mp3 existiert bereits laut deiner Liste.)
-  */
+  const COLORS = ["orange","yellow","pink","blue"];
 
-  const TAB_ORDER = ["orange", "yellow", "pink", "blue"];
+  const menu = document.getElementById("menu");
+  const game = document.getElementById("game");
+  const menuCircles = document.getElementById("menuCircles");
+  const topCircles = document.getElementById("topCircles");
+  const optionsRow = document.getElementById("optionsRow");
+  const btnReplay = document.getElementById("btnReplay");
+  const btnBack = document.getElementById("btnBack");
 
-  const tabsEl = document.getElementById("tabs");
-  const optionsEl = document.getElementById("options");
-  const feedbackEl = document.getElementById("feedback");
-  const catLabelEl = document.getElementById("catLabel");
-  const scoreEl = document.getElementById("score");
-  const roundsEl = document.getElementById("rounds");
+  let activeCat = null;
+  let queue = [];
+  let current = null;
+  let currentOptions = [];
+  let audio = null;
 
-  const codeEls = [
-    document.getElementById("code1"),
-    document.getElementById("code2"),
-    document.getElementById("code3"),
-    document.getElementById("code4")
-  ];
-
-  let activeCatKey = "orange";
-  let currentCorrect = null;    // item
-  let currentOptions = [];      // 4 items
-  let score = 0;
-  let rounds = 0;
-  let correctCountForCode = 0;
-
-  function shuffle(arr){
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+  function shuffle(a){
+    const arr = a.slice();
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
     }
-    return a;
+    return arr;
   }
 
-  function pickN(arr, n){
-    return shuffle(arr).slice(0, n);
+  function pickDistinct(pool, n, avoidKey){
+    const filtered = pool.filter(x => x.key !== avoidKey);
+    return shuffle(filtered).slice(0, n);
   }
 
-  function setFeedback(text, type){
-    feedbackEl.textContent = text || "";
-    feedbackEl.className = "feedback" + (type ? " " + type : "");
+  function buildCircleButton(color, onClick){
+    const b = document.createElement("button");
+    b.className = `circle ${color}`;
+    b.type = "button";
+    b.onclick = onClick;
+    return b;
   }
 
-  function updateHeader(){
-    catLabelEl.textContent = CATEGORIES[activeCatKey].title;
-    scoreEl.textContent = String(score);
-    roundsEl.textContent = String(rounds);
-  }
-
-  function resetCode(){
-    codeEls.forEach(el => el.textContent = "-");
-    correctCountForCode = 0;
-  }
-
-  function revealCodeStep(){
-    // Code-Zeichen frei wählbar (hier: 1–4)
-    const symbols = ["1","2","3","4"];
-    if (correctCountForCode <= 4){
-      codeEls[correctCountForCode-1].textContent = symbols[correctCountForCode-1];
-    }
-  }
-
-  function buildTabs(){
-    tabsEl.innerHTML = "";
-    TAB_ORDER.forEach(k => {
-      const b = document.createElement("button");
-      b.className = "tab" + (k === activeCatKey ? " active" : "");
-      b.dataset.color = k;
-      b.textContent = CATEGORIES[k].title;
-      b.onclick = () => {
-        activeCatKey = k;
-        [...tabsEl.querySelectorAll(".tab")].forEach(t => t.classList.remove("active"));
-        b.classList.add("active");
-        setFeedback("", "");
-        resetCode();
-        score = 0;
-        rounds = 0;
-        updateHeader();
-        newRound(true);
-      };
-      tabsEl.appendChild(b);
+  function renderCircles(container, clickFn){
+    container.innerHTML = "";
+    COLORS.forEach(color=>{
+      container.appendChild(buildCircleButton(color, ()=>clickFn(color)));
     });
   }
 
-  function newRound(autoplay=false){
-    const pool = CATEGORIES[activeCatKey].items;
+  function playAudioFor(key){
+    if(audio){ audio.pause(); audio.currentTime = 0; }
+    audio = new Audio(`${AUDIO_BASE}${key}.mp3`);
+    audio.play().catch(()=>{ /* Autoplay kann auf manchen Geräten erst nach Klick funktionieren */ });
+  }
 
-    if (pool.length < 4){
-      setFeedback("In dieser Kategorie sind noch nicht genug Wörter (mindestens 4).", "no");
-      optionsEl.innerHTML = "";
-      currentCorrect = null;
+  function nextWord(){
+    if(queue.length === 0){
+      // Alle Wörter dieser Kategorie genau einmal gespielt -> zurück zum Menü
+      stopGameToMenu();
       return;
     }
 
-    // 4 Optionen zufällig, richtige Antwort ist eine davon
-    currentOptions = pickN(pool, 4);
-    currentCorrect = currentOptions[Math.floor(Math.random() * currentOptions.length)];
+    current = queue.shift(); // nächstes Wort (einmalig)
+    // 4 Optionen: korrekt + 3 Ablenker (gleiche Kategorie)
+    const pool = CATEGORIES[activeCat];
+    const distractors = pickDistinct(pool, 3, current.key);
+    currentOptions = shuffle([current, ...distractors]);
 
-    // UI aufbauen
-    optionsEl.innerHTML = "";
-    currentOptions.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<img src="${item.img}" alt="${item.label}">`;
-      card.onclick = () => choose(item);
-      optionsEl.appendChild(card);
+    // Render 4 große Bilder
+    optionsRow.innerHTML = "";
+    currentOptions.forEach(item=>{
+      const btn = document.createElement("button");
+      btn.className = "imgBtn";
+      btn.type = "button";
+      btn.innerHTML = `<img src="${item.img}" alt="">`;
+      btn.onclick = ()=>handleChoice(item.key);
+      optionsRow.appendChild(btn);
     });
 
-    setFeedback("Klicke auf „Anhören“ und wähle dann das richtige Bild.", "");
-    rounds++;
-    updateHeader();
-
-    if (autoplay) playCurrent();
+    // Audio automatisch abspielen
+    playAudioFor(current.key);
   }
 
-  function playCurrent(){
-    if (!currentCorrect) return;
-    const a = new Audio(`${AUDIO_BASE}${currentCorrect.key}.mp3`);
-    a.play().catch(()=>{ /* bei restriktiven Browsern muss evtl. erst einmal geklickt werden */ });
-  }
+  function handleChoice(chosenKey){
+    if(!current) return;
 
-  function choose(item){
-    if (!currentCorrect) return;
-
-    if (item.key === currentCorrect.key){
-      setFeedback("Richtig.", "ok");
-      score++;
-      scoreEl.textContent = String(score);
-
-      correctCountForCode++;
-      if (correctCountForCode <= 4) revealCodeStep();
-
-      // kurze Pause, dann nächste Runde
-      setTimeout(() => {
-        setFeedback("", "");
-        newRound(false);
-      }, 550);
-
+    if(chosenKey === current.key){
+      // richtig -> nächstes Wort
+      nextWord();
     } else {
-      setFeedback("Leider falsch. Höre noch einmal und versuche es erneut.", "no");
-      // optional: automatisch nochmal abspielen
-      // playCurrent();
+      // falsch -> nur Audio wiederholen
+      playAudioFor(current.key);
     }
   }
 
-  document.getElementById("btnListen").addEventListener("click", () => playCurrent());
-  document.getElementById("btnNew").addEventListener("click", () => newRound(false));
+  function startGame(categoryKey){
+    activeCat = categoryKey;
+    queue = shuffle(CATEGORIES[activeCat]); // alle Wörter 1x in zufälliger Reihenfolge
 
-  // Start
-  buildTabs();
-  updateHeader();
-  newRound(false);
+    menu.style.display = "none";
+    game.style.display = "block";
+
+    // Kreise oben auch im Spiel klickbar (Kategorie wechseln)
+    renderCircles(topCircles, (c)=>{
+      startGame(c);
+    });
+
+    nextWord();
+  }
+
+  function stopGameToMenu(){
+    if(audio){ audio.pause(); audio.currentTime = 0; }
+    audio = null;
+    current = null;
+    queue = [];
+    optionsRow.innerHTML = "";
+
+    game.style.display = "none";
+    menu.style.display = "grid";
+  }
+
+  // Replay button
+  btnReplay.addEventListener("click", ()=>{
+    if(current) playAudioFor(current.key);
+  });
+
+  // Spare button (zurück)
+  btnBack.addEventListener("click", ()=>{
+    stopGameToMenu();
+  });
+
+  // Build initial menu circles
+  renderCircles(menuCircles, startGame);
+
+  // Also show circles in game header (will be filled when game opens)
+  renderCircles(topCircles, startGame);
 </script>
 </body>
 </html>
