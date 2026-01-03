@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>De Wanter-Code</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("https://i.postimg.cc/BbCyMf2N/winter-background.png") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .overlay {
+        background: rgba(255,255,255,0.85);
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+
+    .code {
+        text-align: center;
+        font-size: 2em;
+        letter-spacing: 15px;
+        margin-bottom: 20px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 10px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .card img {
+        width: 100%;
+        height: 120px;
+        object-fit: contain;
+    }
+
+    .hidden {
+        visibility: hidden;
+    }
+
+    .success {
+        text-align: center;
+        font-size: 2em;
+        margin-top: 30px;
+        display: none;
+    }
+
+    button {
+        display: block;
+        margin: 20px auto;
+        font-size: 1.2em;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+<div class="overlay">
+
+<h1>🔐 De Wanter-Code</h1>
+<p style="text-align:center;">Lauschter gutt a klick op dat richtegt Bild.</p>
+
+<div class="code">
+    <span id="c1">⬜</span>
+    <span id="c2">⬜</span>
+    <span id="c3">⬜</span>
+    <span id="c4">⬜</span>
+    <span id="c5">⬜</span>
+</div>
+
+<button onclick="playWord()">🔊 Lauschter</button>
+
+<div class="grid" id="grid"></div>
+
+<div class="success" id="success">
+    🎉 Bravo! De Code ass fäerdeg! 🎉
+</div>
+
+</div>
+
+<script>
+const items = [
+  {name:"berge", img:"https://i.postimg.cc/CBHV4ZwK/berge.png"},
+  {name:"eisbaer", img:"https://i.postimg.cc/JHrCY1hM/eisbaer.png"},
+  {name:"kakao", img:"https://i.postimg.cc/K3GhpZYK/kakao.png"},
+  {name:"schlitten", img:"https://i.postimg.cc/QVhDdqqZ/schlitten.png"},
+  {name:"schneemann", img:"https://i.postimg.cc/Rq4mZTTn/schneemann.png"},
+  {name:"muetze", img:"https://i.postimg.cc/3WYhxZFf/muetze.png"},
+  {name:"handschuhe", img:"https://i.postimg.cc/Mf6J3WGx/handschuhe.png"},
+  {name:"vogel", img:"https://i.postimg.cc/JtxLDBTq/vogel.png"}
+];
+
+let current;
+let progress = 0;
+
+const grid = document.getElementById("grid");
+
+items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<img src="${item.img}" alt="">`;
+    div.onclick = () => check(item.name, div);
+    grid.appendChild(div);
+});
+
+function playWord() {
+    current = items[Math.floor(Math.random() * items.length)];
+    const audio = new Audio(`https://github.com/albrechtclaire1007/winter/raw/refs/heads/main/${current.name}.mp3`);
+    audio.play();
+}
+
+function check(name, card) {
+    if (!current) return;
+
+    if (name === current.name) {
+        card.classList.add("hidden");
+        document.getElementById(`c${progress+1}`).textContent = "⭐";
+        progress++;
+
+        if (progress === 5) {
+            document.getElementById("success").style.display = "block";
+        }
+
+        current = null;
+    } else {
+        card.style.animation = "shake 0.3s";
+        setTimeout(()=>card.style.animation="",300);
+    }
+}
+</script>
+
+</body>
+</html>
