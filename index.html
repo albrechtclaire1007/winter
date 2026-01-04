@@ -6,180 +6,177 @@
   <title>Winter – Hörspiel</title>
 
   <style>
-    /* Schoulschrëft (ersetze FONT_URL ggf. durch deinen bekannten Link) */
     @font-face{
-      font-family: "Schoulschreft";
-      src: url("https://albrechtclaire1007.github.io/Schoulschr%C3%ABft/Schoulschr%C3%ABft.ttf") format("truetype");
-      font-display: swap;
+      font-family:"Louisville";
+      src:url("https://github.com/albrechtclaire1007/winter4/raw/refs/heads/main/LouisvilleIi-Regular.otf") format("opentype");
+      font-display:swap;
     }
 
-    html, body { height: 100%; margin: 0; }
+    html, body { height:100%; margin:0; }
     body{
-      /* Hintergrund vollständig sichtbar */
-      background: #eaf2ff url("https://i.postimg.cc/BbCyMf2N/winter-background.png") no-repeat center top;
-      background-size: contain;
-      overflow: hidden;
-      font-family: "Schoulschreft", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:#eaf2ff url("https://i.postimg.cc/BbCyMf2N/winter-background.png") no-repeat center top;
+      background-size:contain; /* fully visible */
+      overflow:hidden;
+      font-family:"Louisville", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* Startscreen: nur 4 Kreise */
-    #menu{
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: start center;
-      padding-top: 28px;
-      pointer-events: auto;
+    /* Top center: snowball numbers + instruction */
+    .topBar{
+      position:absolute;
+      top:14px;
+      left:50%;
+      transform:translateX(-50%);
+      width:min(860px, 94vw);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      z-index:10;
+      pointer-events:auto;
     }
 
-    .circles{
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      justify-content: center;
+    .snowballs{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
     }
 
-    .circle{
-      width: 74px;
-      height: 74px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.18);
-      opacity: 0.92;
+    .snowBtn{
+      width:86px;
+      height:86px;
+      border:0;
+      padding:0;
+      background:transparent;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      filter:drop-shadow(0 10px 14px rgba(0,0,0,0.20));
+    }
+    .snowBtn img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .snowBtn:active{ transform:scale(0.985); }
+
+    .instr{
+      width:100%;
+      background:rgba(255,255,255,0.88);
+      border-radius:18px;
+      padding:12px 16px;
+      box-shadow:0 10px 18px rgba(0,0,0,0.14);
+      font-size:22px;
+      text-align:center;
+      line-height:1.2;
+      user-select:none;
     }
 
-    .circle:active{ transform: scale(0.98); }
-
-    .orange{ background:#f4a261; }
-    .yellow{ background:#f6d365; }
-    .pink{ background:#f7a6b8; }
-    .blue{ background:#6ec5d8; }
-
-    /* Game screen: 4 große Bilder in einer Reihe */
-    #game{
-      position: absolute;
-      inset: 0;
-      display: none;
-      pointer-events: auto;
-    }
-
-    .options-row{
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      /* weit genug unten, damit die 4 Kreise oben frei bleiben */
-      top: 35%;
-      width: min(1100px, 92vw);
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      justify-content: center;
+    /* 4 images in a row */
+    .optionsRow{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      top:34%;
+      width:min(1100px, 92vw);
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:center;
     }
 
     .imgBtn{
-      width: 22vw;
-      max-width: 250px;
-      min-width: 150px;
-      aspect-ratio: 1 / 1;
-      border: 0;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.0);
-      cursor: pointer;
-      padding: 0;
-      display: grid;
-      place-items: center;
-      transition: transform 120ms ease;
+      width:22vw;
+      max-width:250px;
+      min-width:150px;
+      aspect-ratio:1/1;
+      border:0;
+      border-radius:18px;
+      background:rgba(255,255,255,0.0);
+      cursor:pointer;
+      padding:0;
+      display:grid;
+      place-items:center;
+      transition:transform .10s ease;
+      user-select:none;
     }
-    .imgBtn:active{ transform: scale(0.985); }
+    .imgBtn:active{ transform:scale(0.985); }
 
     .imgBtn img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.22));
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      filter:drop-shadow(0 12px 18px rgba(0,0,0,0.22));
+      display:block;
+      pointer-events:none;
     }
 
-    /* Replay button (Piktogramm), unten rechts "bei Pinguin" */
-    .replay{
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      width: 66px;
-      height: 66px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      background: rgba(255,255,255,0.85);
-      box-shadow: 0 12px 22px rgba(0,0,0,0.22);
-      display: grid;
-      place-items: center;
-    }
-    .replay:active{ transform: scale(0.98); }
-
-    .replay svg{
-      width: 30px;
-      height: 30px;
-      opacity: 0.9;
+    /* Bottom center controls */
+    .bottomBar{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:16px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+      z-index:10;
+      pointer-events:auto;
     }
 
-    /* Spare button (zurück), klein daneben */
-    .back{
-      position: absolute;
-      right: 94px;
-      bottom: 26px;
-      width: 50px;
-      height: 50px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      background: rgba(255,255,255,0.75);
-      box-shadow: 0 10px 18px rgba(0,0,0,0.18);
-      display: grid;
-      place-items: center;
+    .roundBtn{
+      width:66px;
+      height:66px;
+      border-radius:999px;
+      border:0;
+      cursor:pointer;
+      background:rgba(255,255,255,0.85);
+      box-shadow:0 12px 22px rgba(0,0,0,0.22);
+      display:grid;
+      place-items:center;
     }
-    .back:active{ transform: scale(0.98); }
+    .roundBtn:active{ transform:scale(0.98); }
 
-    .back svg{
-      width: 22px;
-      height: 22px;
-      opacity: 0.85;
+    .roundBtn svg{
+      width:30px;
+      height:30px;
+      opacity:0.9;
     }
 
-    /* oben weiterhin die 4 Kreise sichtbar, auch im Spiel */
-    #topCircles{
-      position: absolute;
-      top: 22px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 5;
-      display: flex;
-      gap: 18px;
+    @media (max-width: 700px){
+      .instr{ font-size:18px; }
+      .snowBtn{ width:72px; height:72px; }
+      .optionsRow{ top:36%; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Menu (nur Kreise) -->
-  <div id="menu">
-    <div class="circles" id="menuCircles"></div>
+  <!-- Top navigation -->
+  <div class="topBar">
+    <div class="snowballs">
+      <button class="snowBtn" id="cat1" aria-label="Kategorie 1"><img src="https://i.postimg.cc/qtgDKnYS/1.png" alt=""></button>
+      <button class="snowBtn" id="cat2" aria-label="Kategorie 2"><img src="https://i.postimg.cc/xkqpmHhD/2.png" alt=""></button>
+      <button class="snowBtn" id="cat3" aria-label="Kategorie 3"><img src="https://i.postimg.cc/k6xq8kRC/3.png" alt=""></button>
+      <button class="snowBtn" id="cat4" aria-label="Kategorie 4"><img src="https://i.postimg.cc/FdjNc2km/4.png" alt=""></button>
+    </div>
+    <div class="instr">Hör zu und klicke auf das passende Bild.</div>
   </div>
 
-  <!-- Game -->
-  <div id="game">
-    <div id="topCircles"></div>
+  <!-- Options -->
+  <div class="optionsRow" id="options"></div>
 
-    <div class="options-row" id="optionsRow"></div>
-
-    <button class="back" id="btnBack" aria-label="Zurück">
-      <!-- Pfeil-Icon -->
+  <!-- Bottom center controls -->
+  <div class="bottomBar">
+    <button class="roundBtn" id="btnBack" aria-label="Zurück">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </button>
 
-    <button class="replay" id="btnReplay" aria-label="Audio wiederholen">
-      <!-- Lautsprecher-Icon -->
+    <button class="roundBtn" id="btnReplay" aria-label="Audio wiederholen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M11 5l-5 4H3v6h3l5 4V5z"/>
         <path d="M15.5 8.5a4 4 0 010 7"/>
@@ -189,30 +186,25 @@
   </div>
 
 <script>
-  const BACKGROUND = "https://i.postimg.cc/BbCyMf2N/winter-background.png";
   const AUDIO_BASE = "https://github.com/albrechtclaire1007/winter/raw/refs/heads/main/";
 
-  /* Kategorien nach deiner Markierung:
-     Orange / Gelb / Pink / Blau.
-     Enthält nur Wörter, für die du Bildlinks gegeben hast.
-     (Reh/Ohrenwärmer sind nicht drin, weil Bildlink fehlt.)
-  */
+  // Kategorie-Zuordnung: 1=orange, 2=yellow, 3=pink, 4=blue
   const CATEGORIES = {
-    orange: [
-      { key:"eisbaer",     img:"https://i.postimg.cc/JHrCY1hM/eisbaer.png" },
-      { key:"pinguin",     img:"https://i.postimg.cc/fkDsRvfg/pinguin.png" },
-      { key:"eiszapfen",   img:"https://i.postimg.cc/BPSf7qv3/eiszapfen.png" },
-      { key:"berge",       img:"https://i.postimg.cc/CBHV4ZwK/berge.png" },
-      { key:"tanne",       img:"https://i.postimg.cc/qgwThCmX/tanne.png" },
-      { key:"vogel",       img:"https://i.postimg.cc/JtxLDBTq/vogel.png" }
+    "1": [
+      { key:"eisbaer",   img:"https://i.postimg.cc/JHrCY1hM/eisbaer.png" },
+      { key:"pinguin",   img:"https://i.postimg.cc/fkDsRvfg/pinguin.png" },
+      { key:"eiszapfen", img:"https://i.postimg.cc/BPSf7qv3/eiszapfen.png" },
+      { key:"berge",     img:"https://i.postimg.cc/CBHV4ZwK/berge.png" },
+      { key:"tanne",     img:"https://i.postimg.cc/qgwThCmX/tanne.png" },
+      { key:"vogel",     img:"https://i.postimg.cc/JtxLDBTq/vogel.png" }
     ],
-    yellow: [
-      { key:"wollsocken",  img:"https://i.postimg.cc/Cd7gBfvb/socken.png" },
-      { key:"muetze",      img:"https://i.postimg.cc/3WYhxZFf/muetze.png" },
-      { key:"wintermantel",img:"https://i.postimg.cc/vcmdWHjW/wintermantel.png" },
-      { key:"pullover",    img:"https://i.postimg.cc/grmp2KHf/pullover.png" }
+    "2": [
+      { key:"socken",       img:"https://i.postimg.cc/Cd7gBfvb/socken.png" },
+      { key:"muetze",       img:"https://i.postimg.cc/3WYhxZFf/muetze.png" },
+      { key:"wintermantel", img:"https://i.postimg.cc/vcmdWHjW/wintermantel.png" },
+      { key:"pullover",     img:"https://i.postimg.cc/grmp2KHf/pullover.png" }
     ],
-    pink: [
+    "3": [
       { key:"kakao",         img:"https://i.postimg.cc/K3GhpZYK/kakao.png" },
       { key:"kerze",         img:"https://i.postimg.cc/vxYw2Qmt/kerze.png" },
       { key:"iglu",          img:"https://i.postimg.cc/9wmHgWfq/iglu.png" },
@@ -220,7 +212,7 @@
       { key:"waermeflasche", img:"https://i.postimg.cc/XXLbGy2s/waermeflasche.png" },
       { key:"decken",        img:"https://i.postimg.cc/zHzY2JfJ/decken.png" }
     ],
-    blue: [
+    "4": [
       { key:"schal",          img:"https://i.postimg.cc/7bw4ZNNy/schal.png" },
       { key:"schlittschuhe",  img:"https://i.postimg.cc/4nsGx11N/schlittschuhe.png" },
       { key:"schneemann",     img:"https://i.postimg.cc/Rq4mZTTn/schneemann.png" },
@@ -237,29 +229,23 @@
     ]
   };
 
-  const COLORS = ["orange","yellow","pink","blue"];
-
-  const menu = document.getElementById("menu");
-  const game = document.getElementById("game");
-  const menuCircles = document.getElementById("menuCircles");
-  const topCircles = document.getElementById("topCircles");
-  const optionsRow = document.getElementById("optionsRow");
+  const optionsEl = document.getElementById("options");
   const btnReplay = document.getElementById("btnReplay");
   const btnBack = document.getElementById("btnBack");
 
-  let activeCat = null;
+  let activeCat = "1";
   let queue = [];
   let current = null;
   let currentOptions = [];
   let audio = null;
 
-  function shuffle(a){
-    const arr = a.slice();
-    for(let i=arr.length-1;i>0;i--){
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
-      [arr[i],arr[j]] = [arr[j],arr[i]];
+      [a[i],a[j]] = [a[j],a[i]];
     }
-    return arr;
+    return a;
   }
 
   function pickDistinct(pool, n, avoidKey){
@@ -267,109 +253,65 @@
     return shuffle(filtered).slice(0, n);
   }
 
-  function buildCircleButton(color, onClick){
-    const b = document.createElement("button");
-    b.className = `circle ${color}`;
-    b.type = "button";
-    b.onclick = onClick;
-    return b;
-  }
-
-  function renderCircles(container, clickFn){
-    container.innerHTML = "";
-    COLORS.forEach(color=>{
-      container.appendChild(buildCircleButton(color, ()=>clickFn(color)));
-    });
-  }
-
   function playAudioFor(key){
     if(audio){ audio.pause(); audio.currentTime = 0; }
     audio = new Audio(`${AUDIO_BASE}${key}.mp3`);
-    audio.play().catch(()=>{ /* Autoplay kann auf manchen Geräten erst nach Klick funktionieren */ });
+    audio.play().catch(()=>{});
+  }
+
+  function startCategory(cat){
+    activeCat = cat;
+    queue = shuffle(CATEGORIES[activeCat]);
+    nextWord();
   }
 
   function nextWord(){
     if(queue.length === 0){
-      // Alle Wörter dieser Kategorie genau einmal gespielt -> zurück zum Menü
-      stopGameToMenu();
-      return;
+      // wenn fertig: neu mischen und weiter
+      queue = shuffle(CATEGORIES[activeCat]);
     }
 
-    current = queue.shift(); // nächstes Wort (einmalig)
-    // 4 Optionen: korrekt + 3 Ablenker (gleiche Kategorie)
+    current = queue.shift();
     const pool = CATEGORIES[activeCat];
     const distractors = pickDistinct(pool, 3, current.key);
     currentOptions = shuffle([current, ...distractors]);
 
-    // Render 4 große Bilder
-    optionsRow.innerHTML = "";
+    optionsEl.innerHTML = "";
     currentOptions.forEach(item=>{
       const btn = document.createElement("button");
       btn.className = "imgBtn";
       btn.type = "button";
       btn.innerHTML = `<img src="${item.img}" alt="">`;
-      btn.onclick = ()=>handleChoice(item.key);
-      optionsRow.appendChild(btn);
+      btn.onclick = ()=>choose(item.key);
+      optionsEl.appendChild(btn);
     });
 
-    // Audio automatisch abspielen
     playAudioFor(current.key);
   }
 
-  function handleChoice(chosenKey){
+  function choose(chosenKey){
     if(!current) return;
-
     if(chosenKey === current.key){
-      // richtig -> nächstes Wort
       nextWord();
-    } else {
-      // falsch -> nur Audio wiederholen
+    }else{
       playAudioFor(current.key);
     }
   }
 
-  function startGame(categoryKey){
-    activeCat = categoryKey;
-    queue = shuffle(CATEGORIES[activeCat]); // alle Wörter 1x in zufälliger Reihenfolge
+  // Snowball navigation
+  document.getElementById("cat1").addEventListener("click", ()=>startCategory("1"));
+  document.getElementById("cat2").addEventListener("click", ()=>startCategory("2"));
+  document.getElementById("cat3").addEventListener("click", ()=>startCategory("3"));
+  document.getElementById("cat4").addEventListener("click", ()=>startCategory("4"));
 
-    menu.style.display = "none";
-    game.style.display = "block";
+  // Bottom controls
+  btnReplay.addEventListener("click", ()=>{ if(current) playAudioFor(current.key); });
+  btnBack.addEventListener("click", ()=>{ startCategory(activeCat); });
 
-    // Kreise oben auch im Spiel klickbar (Kategorie wechseln)
-    renderCircles(topCircles, (c)=>{
-      startGame(c);
-    });
-
-    nextWord();
-  }
-
-  function stopGameToMenu(){
-    if(audio){ audio.pause(); audio.currentTime = 0; }
-    audio = null;
-    current = null;
-    queue = [];
-    optionsRow.innerHTML = "";
-
-    game.style.display = "none";
-    menu.style.display = "grid";
-  }
-
-  // Replay button
-  btnReplay.addEventListener("click", ()=>{
-    if(current) playAudioFor(current.key);
-  });
-
-  // Spare button (zurück)
-  btnBack.addEventListener("click", ()=>{
-    stopGameToMenu();
-  });
-
-  // Build initial menu circles
-  renderCircles(menuCircles, startGame);
-
-  // Also show circles in game header (will be filled when game opens)
-  renderCircles(topCircles, startGame);
+  // Start
+  startCategory("1");
 </script>
 </body>
 </html>
+
 
